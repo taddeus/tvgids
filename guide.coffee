@@ -53,8 +53,8 @@ ChannelList = Backbone.Collection.extend(
         #@fetchPrograms(0)
 
     fetch: ->
-        @reset(CHANNELS.slice(0,3))
         @reset(CHANNELS)
+        #@reset(CHANNELS.slice(0,3))
         #$.getJSON('channels.php', (data) => @reset(data))
 
     fetchVisible: ->
