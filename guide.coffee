@@ -7,7 +7,6 @@ FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
 SCROLL_MULTIPLIER = HOUR_WIDTH
 
-
 #
 # Utils
 #
@@ -164,11 +163,13 @@ AppView = Backbone.View.extend(
         setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
 
     addChannels: () ->
+        @$('.channels').empty()
         Channels.each((channel) ->
             view = new ChannelView(model: channel)
             view.render()
             @$('.channels').append(view.el)
         , @)
+        @$('.indicator').height(@$('.channels').height())
         @fetchPrograms()
 
     loadDay: (day) ->
