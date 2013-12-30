@@ -1,4 +1,5 @@
 *.swp
 .sass-cache
 guide.js
+settings.js
 style.css
