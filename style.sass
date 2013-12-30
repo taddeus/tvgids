@@ -1,7 +1,6 @@
 $indicator-color: red
-$timeline-height: 30px
 $hour-width: 200px
-$channel-height: 40px
+$channel-height: 34px
 
 html, body
     width: 100%
@@ -11,6 +10,24 @@ html, body
     padding: 0
 
 
+.navbar
+    background-color: #232323
+    width: 24 * $hour-width
+
+    .navitem
+        color: #9a9a9a
+        text-decoration: none
+        font: normal 13px/18px Helvetica
+        display: inline-block
+        padding: 10px 20px
+
+        &:hover
+            color: #bcbcbc
+
+        &.active
+            color: #fff
+            background-color: #1a1a1a
+
 .guide
     width: 100%
     overflow-x: scroll
@@ -18,18 +35,48 @@ html, body
     position: relative
 
 .timeline
-    height: $timeline-height
     width: 24 * $hour-width
+    height: 26px
 
     .hour
+        font: normal 13px Helvetica
         float: left
-        width: $hour-width
-        height: $timeline-height
+        width: $hour-width - 7px
+        border-left: 1px solid #444
+        padding: 5px 0 0 6px
+        height: 21px
 
     //.label
     //    width: 50px
     //    margin-left: -25px
     //    text-align: center
+
+.channels
+    width: 24 * $hour-width
+    overflow: hidden
+
+.channel
+    position: relative
+    height: $channel-height
+
+    .program
+        position: absolute
+        white-space: nowrap
+        height: $channel-height - 10px
+        padding: 8px 0 0 8px
+        border-left: 2px solid white
+        background-color: #eee
+        font: normal 13px/15px Helvetica
+        overflow: hidden
+        color: #555
+
+        &.past
+            background-color: #ececec
+            color: #aaa
+
+        &.current
+            background-color: #ddd
+            color: #444
 
 .indicator
     position: absolute
@@ -37,11 +84,3 @@ html, body
     height: 100%
     top: 0
     background-color: $indicator-color
-
-.channel
-    position: relative
-
-    .program
-        position: absolute
-        height: $channel-height - 2px
-        border: 1px solid white

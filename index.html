@@ -6,34 +6,40 @@
     </head>
     <body>
         <div id="guide" class="guide">
-            <div class="timeline">
-                <div class="hour"><span class="label">00:00</span></div>
-                <div class="hour"><span class="label">01:00</span></div>
-                <div class="hour"><span class="label">02:00</span></div>
-                <div class="hour"><span class="label">03:00</span></div>
-                <div class="hour"><span class="label">04:00</span></div>
-                <div class="hour"><span class="label">05:00</span></div>
-                <div class="hour"><span class="label">06:00</span></div>
-                <div class="hour"><span class="label">07:00</span></div>
-                <div class="hour"><span class="label">08:00</span></div>
-                <div class="hour"><span class="label">09:00</span></div>
-                <div class="hour"><span class="label">10:00</span></div>
-                <div class="hour"><span class="label">11:00</span></div>
-                <div class="hour"><span class="label">12:00</span></div>
-                <div class="hour"><span class="label">13:00</span></div>
-                <div class="hour"><span class="label">14:00</span></div>
-                <div class="hour"><span class="label">15:00</span></div>
-                <div class="hour"><span class="label">16:00</span></div>
-                <div class="hour"><span class="label">17:00</span></div>
-                <div class="hour"><span class="label">18:00</span></div>
-                <div class="hour"><span class="label">19:00</span></div>
-                <div class="hour"><span class="label">20:00</span></div>
-                <div class="hour"><span class="label">21:00</span></div>
-                <div class="hour"><span class="label">22:00</span></div>
-                <div class="hour"><span class="label">23:00</span></div>
+            <div class="navbar">
+                <a href="javascript:void(0);" id="yesterday" class="navitem">Gisteren</a>
+                <a href="javascript:void(0);" id="today" class="navitem active">Vandaag</a>
+                <a href="javascript:void(0);" id="tomorrow" class="navitem">Morgen</a>
+                <a href="settings.html" class="navitem">Selecteer zenders</a>
             </div>
-            <div class="indicator"></div>
+            <div class="timeline">
+                <div class="hour">00:00</div>
+                <div class="hour">01:00</div>
+                <div class="hour">02:00</div>
+                <div class="hour">03:00</div>
+                <div class="hour">04:00</div>
+                <div class="hour">05:00</div>
+                <div class="hour">06:00</div>
+                <div class="hour">07:00</div>
+                <div class="hour">08:00</div>
+                <div class="hour">09:00</div>
+                <div class="hour">10:00</div>
+                <div class="hour">11:00</div>
+                <div class="hour">12:00</div>
+                <div class="hour">13:00</div>
+                <div class="hour">14:00</div>
+                <div class="hour">15:00</div>
+                <div class="hour">16:00</div>
+                <div class="hour">17:00</div>
+                <div class="hour">18:00</div>
+                <div class="hour">19:00</div>
+                <div class="hour">20:00</div>
+                <div class="hour">21:00</div>
+                <div class="hour">22:00</div>
+                <div class="hour">23:00</div>
+            </div>
             <div class="channels"></div>
+            <div class="indicator"></div>
         </div>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
@@ -48,6 +54,7 @@
             </div>
         </script>
 
+        <script src="channels.js" type="text/javascript"></script>
         <script src="guide.js" type="text/javascript"></script>
     </body>
 </html>

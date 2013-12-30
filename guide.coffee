@@ -2,38 +2,22 @@
 # Config
 #
 
+#FETCH_URL = 'http://www.tvgids.nl/json/lists/programs.php'
+FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
 SCROLL_MULTIPLIER = HOUR_WIDTH
-
-CHANNELS =
-    '1':   name: 'Nederland 1'
-    '2':   name: 'Nederland 2'
-    '3':   name: 'Nederland 3'
-    '4':   name: 'RTL 4'
-    '5':   name: 'E&eacute;n'
-    '6':   name: 'Canvas'
-    '18':  name: 'NGC'
-    '24':  name: 'Film 1 Premium'
-    '29':  name: 'Discovery'
-    '31':  name: 'RTL 5'
-    '34':  name: 'Veronica'
-    '36':  name: 'SBS6'
-    '37':  name: 'NET 5'
-    '46':  name: 'RTL 7'
-    '91':  name: 'Comedy Central'
-    '92':  name: 'RTL 8'
-    '435': name: '24 Kitchen'
-    '438': name: 'TLC'
-    '440': name: 'FOX'
 
 
 #
 # Utils
 #
 
-tosecs = (date) -> date.getHours() * 60 + date.getSeconds()
-now = -> tosecs(new Date())
+seconds_today = (time) -> (time - (new Date()).setHours(0, 0, 0, 0)) / 1000
 time2px = (seconds) -> HOUR_WIDTH / 3600 * seconds
+zeropad = (digit) -> if digit < 10 then '0' + digit else String(digit)
+format_time = (time) ->
+    date = new Date(time)
+    zeropad(date.getHours()) + ':' + zeropad(date.getMinutes())
 
 #
 # Models & collections
@@ -44,16 +28,18 @@ Channel = Backbone.Model.extend(
         id: null
         name: 'Some channel'
         visible: true
-
-    initialize: (attrs, options) ->
-        @programs = []
+        programs: []
 )
 
-Progam = Backbone.Model.extend(
+Program = Backbone.Model.extend(
     defaults: ->
         title: 'Some program'
-        start: null
-        end: null
+        genre: ''
+        sort: ''
+        start: 0
+        end: 0
+        #article_id: null
+        #article_title: null
 )
 
 ChannelList = Backbone.Collection.extend(
@@ -61,9 +47,15 @@ ChannelList = Backbone.Collection.extend(
     comparator: 'id'
 
     initialize: (models, options) ->
-        _.each(CHANNELS, (props, id) => @add(_.extend({id: id}, props)))
+        #_.each(CHANNELS, (props, id) => @add(_.extend({id: id}, props)))
+
         @fetchVisible()
-        #@loadPrograms(0)
+        #@fetchPrograms(0)
+
+    fetch: ->
+        @reset(CHANNELS.slice(0,3))
+        @reset(CHANNELS)
+        #$.getJSON('channels.php', (data) => @reset(data))
 
     fetchVisible: ->
         visible = if localStorage.hasOwnProperty('channels') \
@@ -83,16 +75,24 @@ ChannelList = Backbone.Collection.extend(
 
         @saveVisible() if save
 
-    loadPrograms: (day, callback) ->
-        $.get(
-            'http://www.tvgids.nl/json/lists/programs.php'
+    fetchPrograms: (day) ->
+        $.getJSON(
+            FETCH_URL
             channels: @pluck('id').join(','), day: day
             (channels) ->
-                _.each channels, (id, programs) ->
+                _.each channels, (programs, id) ->
                     channel = Channels.findWhere(id: id)
-                    channel.programs = (new Program(p) for p in programs)
-                    callback() if callback
-            'json'
+                    channel.set('programs', (
+                        new Program(
+                            title: p.titel
+                            genre: p.genre
+                            sort: p.soort
+                            start: Date.parse(p.datum_start)
+                            end: Date.parse(p.datum_end)
+                            #article_id: p.artikel_id
+                            #article_title: p.artikel_titel
+                        ) for p in programs
+                    ))
         )
 )
 
@@ -106,10 +106,19 @@ ChannelView = Backbone.View.extend(
     #template: _.template($('#channel-template').html())
 
     initialize: ->
-        $el.text(@model.title)
+        @listenTo(@model, 'change:programs', @render)
+        @listenTo(@model, 'change:visible', @toggleVisible)
+        #@$el.text(@model.get('title'))
 
     render: ->
-        $el.toggle(@model.visible)
+        @$el.empty()
+        _.each @model.get('programs'), (program) =>
+            view = new ProgramView(model: program)
+            view.render()
+            @$el.append(view.el)
+
+    toggleVisible: ->
+        @$el.toggle(@model.get('visible'))
 )
 
 ProgramView = Backbone.View.extend(
@@ -117,42 +126,70 @@ ProgramView = Backbone.View.extend(
     className: 'program'
 
     initialize: ->
-        $el.text(@model.title)
+        @$el.text(@model.get('title'))
+        from = format_time(@model.get('start'))
+        to = format_time(@model.get('end'))
+        @$el.attr('title', @model.get('title') + " (#{from} - #{to})")
+
+        left = time2px(Math.max(0, seconds_today(@model.get('start'))))
+        width = time2px(seconds_today(@model.get('end'))) - left
+        @$el.css(
+            left: left + 'px'
+            width: (width - 10) + 'px'
+        )
 
     render: ->
-        # TODO: set highlight to past/present/future
+        if @model.get('start') <= Date.now()
+            if @model.get('end') < Date.now()
+                @$el.removeClass('current').addClass('past')
+            else
+                @$el.addClass('current')
 )
 
 AppView = Backbone.View.extend(
     el: $('#guide')
 
+    events:
+        'click #yesterday': -> @loadDay(-1)
+        'click #today': -> @loadDay(0)
+        'click #tomorrow': -> @loadDay(1)
+
     initialize: ->
-        @listenTo(Channels, 'add', @addChannel)
-        @listenTo(Channels, 'reset', => Channels.each(@addChannel, @))
-        @listenTo(Channels, 'all', @render)
+        @updateIndicator()
+        @listenTo(Channels, 'reset', @addChannels)
 
-        @setDay(0, => @updateIndicator())
+        Channels.fetch()
+        @listenTo(Settings, 'change:day', @fetchPrograms)
 
-        #setInterval(=> @updateIndicator(), 3600000 / HOUR_WIDTH)
+        setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
 
-    setDay: (day, callback) ->
-        Channels.loadPrograms(@day = day, callback)
+    addChannels: () ->
+        Channels.each((channel) ->
+            view = new ChannelView(model: channel)
+            view.render()
+            @$('.channels').append(view.el)
+        , @)
+        @fetchPrograms()
 
-    addChannel: (channel) ->
-        view = new ChannelView(model: channel)
-        @$('.channels').append(view.render().el)
+    loadDay: (day) ->
+        Settings.set(day: day)
+        @$('.navbar .active').removeClass('active')
+        $(@$('.navbar .navitem')[day + 1]).addClass('active')
 
     updateIndicator: ->
-        @$('.indicator').css('left', time2px(now()) + 'px')
+        @$('.indicator').css('left', time2px(seconds_today(Date.now())) + 'px')
 
-    render: ->
-        hidden
-        @$('.channel')
+    fetchPrograms: ->
+        Channels.fetchPrograms(Settings.get('day'))
 )
 
 #
 # Main
 #
 
+Settings = new (Backbone.Model.extend(
+    defaults: ->
+        day: 0
+))()
 Channels = new ChannelList()
 App = new AppView()
