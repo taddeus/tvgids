@@ -5,7 +5,8 @@
 FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
 CHANNEL_LABEL_WIDTH = 180
-STORAGE_NAME = 'tvgids-channels'
+STORAGE_CHANNELS = 'tvgids-channels'
+STORAGE_PROGRAMS = 'tvgids-programs'
 #SCROLL_MULTIPLIER = HOUR_WIDTH
 
 #
@@ -19,12 +20,18 @@ format_time = (time) ->
     date = new Date(time)
     zeropad(date.getHours()) + ':' + zeropad(date.getMinutes())
 
+store_list = (name, values) -> localStorage.setItem(name, values.join(';'))
+load_stored_list = (name, def) ->
+    store_list(name, def) if not localStorage.hasOwnProperty(name)
+    value = localStorage.getItem(name)
+    if value.length > 0 then value.split(';') else []
+
 #
 # Models & collections
 #
 
 Channel = Backbone.Model.extend(
-    defaults: ->
+    defaults:
         id: null
         name: 'Some channel'
         visible: true
@@ -32,7 +39,7 @@ Channel = Backbone.Model.extend(
 )
 
 Program = Backbone.Model.extend(
-    defaults: ->
+    defaults:
         title: 'Some program'
         genre: ''
         sort: ''
@@ -46,24 +53,21 @@ ChannelList = Backbone.Collection.extend(
     model: Channel
     #comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
+    initialize: ->
+        @listenTo(Settings, 'change:favourite_channels', @propagateVisible)
+
     fetch: ->
         @reset(CHANNELS)
-        #@reset(CHANNELS.slice(0,3))
         #$.getJSON('channels.php', (data) => @reset(data))
         @propagateVisible()
 
     propagateVisible: ->
-        visible = if localStorage.hasOwnProperty(STORAGE_NAME) \
-            then localStorage.getItem(STORAGE_NAME).split(',') else @pluck('id')
+        visible = Settings.get('favourite_channels')
 
         for id in visible
-            if @length and not @findWhere(id: id)
-                console.log 'not found:', id, typeof id, typeof @at(0).get('id')
             @findWhere(id: id)?.set(visible: true)
 
         for id in _.difference(@pluck('id'), visible)
-            if not @findWhere(id: id)
-                console.log 'not found:', id
             @findWhere(id: id)?.set(visible: false)
 
     fetchPrograms: (day) ->
@@ -73,7 +77,7 @@ ChannelList = Backbone.Collection.extend(
             (channels) ->
                 _.each channels, (programs, id) ->
                     channel = Channels.findWhere(id: id)
-                    channel.set('programs', (
+                    channel.set(programs: (
                         new Program(
                             title: p.titel
                             genre: p.genre
@@ -115,11 +119,18 @@ ProgramView = Backbone.View.extend(
     tagName: 'div'
     className: 'program'
 
+    events:
+        'click .favlink': 'toggleFavourite'
+
     initialize: ->
-        @$el.text(@model.get('title'))
+        $('<span class="title"/>').text(@model.get('title')).appendTo(@el)
         from = format_time(@model.get('start'))
         to = format_time(@model.get('end'))
         @$el.attr('title', @model.get('title') + " (#{from} - #{to})")
+
+        @$fav = $('<a class="favlink icon-heart"/>').appendTo(@el)
+        @$fav.attr('title', 'Als favoriet instellen')
+        @updateFavlink()
 
         left = time2px(Math.max(0, seconds_today(@model.get('start'))))
         width = time2px(seconds_today(@model.get('end'))) - left
@@ -127,6 +138,15 @@ ProgramView = Backbone.View.extend(
             left: left + 'px'
             width: (width - 10) + 'px'
         )
+
+        @listenTo(Settings, 'change:favourite_programs', @updateFavlink)
+
+    toggleFavourite: ->
+        Settings.toggleFavouriteProgram(@model.get('title'))
+
+    updateFavlink: ->
+        isfav = Settings.isFavouriteProgram(@model.get('title'))
+        @$fav.toggleClass('favourite', isfav)
 
     render: ->
         if @model.get('start') <= Date.now()
@@ -162,6 +182,7 @@ AppView = Backbone.View.extend(
     el: $('#guide')
 
     events:
+        # TODO: move to initialize
         'click #yesterday': -> @loadDay(-1)
         'click #today': -> @loadDay(0)
         'click #tomorrow': -> @loadDay(1)
@@ -217,8 +238,26 @@ AppView = Backbone.View.extend(
 #
 
 Settings = new (Backbone.Model.extend(
-    defaults: ->
+    defaults:
         day: 0
+        favourite_channels: load_stored_list(STORAGE_CHANNELS,
+                                             _.pluck(CHANNELS, 'id'))
+        favourite_programs: load_stored_list(STORAGE_PROGRAMS, [])
+
+    toggleFavouriteProgram: (title) ->
+        list = @get('favourite_programs')
+
+        if @isFavouriteProgram(title)
+            list.splice(list.indexOf(title), 1)
+        else
+            list.push(title)
+
+        @attributes.favourite_programs = list
+        @trigger('change:favourite_programs')
+        store_list(STORAGE_PROGRAMS, list)
+
+    isFavouriteProgram: (title) ->
+        _.contains(@get('favourite_programs'), title)
 ))()
 Channels = new ChannelList()
 App = new AppView()

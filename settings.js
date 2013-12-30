@@ -4,7 +4,7 @@
 
   STORAGE_NAME = 'tvgids-channels';
 
-  visible = localStorage.hasOwnProperty(STORAGE_NAME) ? localStorage.getItem(STORAGE_NAME).split(',') : _.pluck(CHANNELS, 'id');
+  visible = localStorage.hasOwnProperty(STORAGE_NAME) ? localStorage.getItem(STORAGE_NAME).split(';') : _.pluck(CHANNELS, 'id');
 
   _.each(CHANNELS, function(channel) {
     var elem, input, is_visible;
@@ -38,7 +38,7 @@
       }
       return _results;
     }).call(this);
-    return localStorage.setItem(STORAGE_NAME, selected.join(','));
+    return localStorage.setItem(STORAGE_NAME, selected.join(';'));
   });
 
   setall = function(c) {

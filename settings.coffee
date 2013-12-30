@@ -1,7 +1,7 @@
 STORAGE_NAME = 'tvgids-channels'
 
 visible = if localStorage.hasOwnProperty(STORAGE_NAME) \
-    then localStorage.getItem(STORAGE_NAME).split(',') \
+    then localStorage.getItem(STORAGE_NAME).split(';') \
     else _.pluck(CHANNELS, 'id')
 
 _.each CHANNELS, (channel) ->
@@ -20,7 +20,7 @@ _.each CHANNELS, (channel) ->
 $('#select-channels').submit (e) ->
     e.preventDefault()
     selected = ($(i).val() for i in $('input', @) when $(i).is(':checked'))
-    localStorage.setItem(STORAGE_NAME, selected.join(','))
+    localStorage.setItem(STORAGE_NAME, selected.join(';'))
 
 setall = (c) -> $('#select-channels input').prop('checked', c).change()
 $('#select-all').click -> setall(true)

@@ -99,6 +99,24 @@ html, body
             background-color: #ddd
             color: #444
 
+        .favlink
+            position: absolute
+            right: 10px
+            top: 10px
+            visibility: hidden
+            color: #fff
+
+            &:hover
+                color: #bcbcbc
+
+            &.favourite
+                color: orange
+                visibility: visible
+
+        &:hover .favlink
+            visibility: visible
+
+
 .indicator
     position: absolute
     width: 1px
