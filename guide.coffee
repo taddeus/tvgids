@@ -5,6 +5,7 @@
 #FETCH_URL = 'http://www.tvgids.nl/json/lists/programs.php'
 FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
+CHANNEL_LABEL_WIDTH = 180
 #SCROLL_MULTIPLIER = HOUR_WIDTH
 
 #
@@ -43,12 +44,10 @@ Program = Backbone.Model.extend(
 
 ChannelList = Backbone.Collection.extend(
     model: Channel
-    comparator: 'id'
+    comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
     initialize: (models, options) ->
-        #_.each(CHANNELS, (props, id) => @add(_.extend({id: id}, props)))
         @fetchVisible()
-        #@fetchPrograms(0)
 
     fetch: ->
         @reset(CHANNELS)
@@ -144,6 +143,23 @@ ProgramView = Backbone.View.extend(
                 @$el.addClass('current')
 )
 
+ChannelLabelView = Backbone.View.extend(
+    el: $('.channel-labels')
+
+    initialize: (options) ->
+        @listenTo(Channels, 'reset', @addChannels)
+        @listenTo(options.app, 'scroll', @moveTop)
+
+    addChannels: ->
+        @$el.empty()
+        Channels.each((channel) ->
+            @$el.append('<div class="label">' + channel.get('name') + '</div>')
+        , @)
+
+    moveTop: (delta) ->
+        @$el.css('top', (@$el.position().top - delta) + 'px')
+)
+
 AppView = Backbone.View.extend(
     el: $('#guide')
 
@@ -155,8 +171,9 @@ AppView = Backbone.View.extend(
 
     moveTimeline: ->
         if @$el.scrollTop() != @prevScrollTop
+            @trigger('scroll', @$el.scrollTop() - @prevScrollTop)
             @prevScrollTop = @$el.scrollTop()
-            @$('.timeline').css('top', (@$el.scrollTop() + 38) + 'px')
+            @$('.timeline').css('top', (@$el.scrollTop() + 37) + 'px')
 
     initialize: ->
         @prevScrollTop = null
@@ -164,13 +181,15 @@ AppView = Backbone.View.extend(
         @listenTo(Channels, 'reset', @addChannels)
         @listenTo(Settings, 'change:day', @fetchPrograms)
 
+        @labelview = new ChannelLabelView(app: @)
+
         @updateIndicator()
         @centerIndicator()
         Channels.fetch()
         setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
 
-    addChannels: () ->
-        @$('.channels').empty()
+    addChannels: ->
+        @$('.channels > .channel').remove()
         Channels.each((channel) ->
             view = new ChannelView(model: channel)
             view.render()
@@ -185,7 +204,8 @@ AppView = Backbone.View.extend(
         $(@$('.navbar .navitem')[day + 1]).addClass('active')
 
     updateIndicator: ->
-        @$('.indicator').css('left', time2px(seconds_today(Date.now())) + 'px')
+        left = time2px(seconds_today(Date.now())) + CHANNEL_LABEL_WIDTH - 1
+        @$('.indicator').css('left', left + 'px')
 
     centerIndicator: ->
         @$el.scrollLeft(@$('.indicator').position().left - @$el.width() / 2)

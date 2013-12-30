@@ -6,8 +6,10 @@
     </head>
     <body>
         <div id="guide" class="guide">
-            <div class="channels"></div>
+            <div class="channels">
+            </div>
             <div class="indicator"></div>
+            <div class="channel-labels"></div>
             <div class="timeline-bg"></div>
             <div class="timeline">
                 <div class="hour">00:00</div>
@@ -48,12 +50,6 @@
         <script src="lib/underscore-min.js" type="text/javascript"></script>
         <script src="lib/backbone-min.js" type="text/javascript"></script>
         <script src="lib/json2.js" type="text/javascript"></script>
-
-        <script type="text/template" id="program-template">
-            <div class="program">
-                <%= title %>
-            </div>
-        </script>
 
         <script src="channels.js" type="text/javascript"></script>
         <script src="guide.js" type="text/javascript"></script>

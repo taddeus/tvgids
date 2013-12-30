@@ -1,6 +1,8 @@
 $indicator-color: red
 $hour-width: 200px
 $channel-height: 34px
+$header-height: 64px
+$channel-label-width: 180px
 
 html, body
     width: 100%
@@ -40,6 +42,7 @@ html, body
     height: 21px
     top: 38px
     position: fixed
+    position: fixed
     background-color: #fdfdfd
 
 .timeline
@@ -48,6 +51,7 @@ html, body
     position: absolute
     top: 38px
     background-color: #fdfdfd
+    margin-left: $channel-label-width - 1px
 
     .hour
         font: normal 13px Helvetica
@@ -55,7 +59,7 @@ html, body
         width: $hour-width - 7px
         border-left: 1px solid #444
         padding: 5px 0 0 6px
-        height: 21px
+        height: 20px
 
     //.label
     //    width: 50px
@@ -63,7 +67,7 @@ html, body
     //    text-align: center
 
 .channels
-    margin-top: 66px
+    margin: $header-height 0 0 ($channel-label-width - 1px)
     width: 24 * $hour-width
     overflow: hidden
 
@@ -76,7 +80,8 @@ html, body
         white-space: nowrap
         height: $channel-height - 10px
         padding: 8px 0 0 8px
-        border-left: 2px solid white
+        border-left: 1px solid white
+        border-right: 1px solid white
         background-color: #eee
         font: normal 13px/15px Helvetica
         overflow: hidden
@@ -94,5 +99,23 @@ html, body
     position: absolute
     width: 1px
     height: 100%
-    top: 66px
+    top: $header-height
     background-color: $indicator-color
+
+.channel-labels
+    width: $channel-label-width - 2px
+    position: fixed
+    top: $header-height
+    left: 0
+    border-right: 2px solid #fff
+
+    .label
+        width: $channel-label-width - 13px
+        background-color: #e5e5e5
+        color: #666
+        font: bold 13px/15px Helvetica
+        padding: 8px 10px 0 0
+        text-align: right
+        height: $channel-height - 10px
+        margin-bottom: 2px
+        border-right: 1px solid #bbb
