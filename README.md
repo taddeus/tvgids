@@ -8,3 +8,7 @@ that saves preferences (e.g. favorite channels) in HTML5 local
 storage rather than requiring a registered account.
 
 A working version is available at http://tkroes.nl/tvgids/.
+
+Issues & TODO
+-------------
+- Some channels show no programs while they should.
