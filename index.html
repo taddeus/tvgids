@@ -6,12 +6,9 @@
     </head>
     <body>
         <div id="guide" class="guide">
-            <div class="navbar">
-                <a href="javascript:void(0);" id="yesterday" class="navitem">Gisteren</a>
-                <a href="javascript:void(0);" id="today" class="navitem active">Vandaag</a>
-                <a href="javascript:void(0);" id="tomorrow" class="navitem">Morgen</a>
-                <a href="settings.html" class="navitem">Selecteer zenders</a>
-            </div>
+            <div class="channels"></div>
+            <div class="indicator"></div>
+            <div class="timeline-bg"></div>
             <div class="timeline">
                 <div class="hour">00:00</div>
                 <div class="hour">01:00</div>
@@ -38,8 +35,12 @@
                 <div class="hour">22:00</div>
                 <div class="hour">23:00</div>
             </div>
-            <div class="channels"></div>
-            <div class="indicator"></div>
+        </div>
+        <div class="navbar">
+            <a href="javascript:void(0);" id="yesterday" class="navitem">Gisteren</a>
+            <a href="javascript:void(0);" id="today" class="navitem active">Vandaag</a>
+            <a href="javascript:void(0);" id="tomorrow" class="navitem">Morgen</a>
+            <a href="settings.html" class="navitem">Selecteer zenders</a>
         </div>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>

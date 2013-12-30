@@ -151,15 +151,22 @@ AppView = Backbone.View.extend(
         'click #yesterday': -> @loadDay(-1)
         'click #today': -> @loadDay(0)
         'click #tomorrow': -> @loadDay(1)
+        'scroll': 'moveTimeline'
+
+    moveTimeline: ->
+        if @$el.scrollTop() != @prevScrollTop
+            @prevScrollTop = @$el.scrollTop()
+            @$('.timeline').css('top', (@$el.scrollTop() + 38) + 'px')
 
     initialize: ->
-        @updateIndicator()
-        @centerIndicator()
-        @listenTo(Channels, 'reset', @addChannels)
+        @prevScrollTop = null
 
-        Channels.fetch()
+        @listenTo(Channels, 'reset', @addChannels)
         @listenTo(Settings, 'change:day', @fetchPrograms)
 
+        @updateIndicator()
+        @centerIndicator()
+        Channels.fetch()
         setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
 
     addChannels: () ->
@@ -181,7 +188,7 @@ AppView = Backbone.View.extend(
         @$('.indicator').css('left', time2px(seconds_today(Date.now())) + 'px')
 
     centerIndicator: ->
-        @el.scrollLeft = @$('.indicator').position().left - @$el.width() / 2
+        @$el.scrollLeft(@$('.indicator').position().left - @$el.width() / 2)
 
     fetchPrograms: ->
         Channels.fetchPrograms(Settings.get('day'))
