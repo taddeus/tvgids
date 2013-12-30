@@ -46,10 +46,6 @@ ChannelList = Backbone.Collection.extend(
     model: Channel
     comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
-    initialize: (models, options) ->
-        @visible = if localStorage.hasOwnProperty(STORAGE_NAME) \
-            then localStorage.getItem(STORAGE_NAME).split(',') else @pluck('id')
-
     fetch: ->
         @reset(CHANNELS)
         #@reset(CHANNELS.slice(0,3))
@@ -57,12 +53,15 @@ ChannelList = Backbone.Collection.extend(
         @propagateVisible()
 
     propagateVisible: ->
-        for id in @visible
+        visible = if localStorage.hasOwnProperty(STORAGE_NAME) \
+            then localStorage.getItem(STORAGE_NAME).split(',') else @pluck('id')
+
+        for id in visible
             if @length and not @findWhere(id: id)
                 console.log 'not found:', id, typeof id, typeof @at(0).get('id')
             @findWhere(id: id)?.set(visible: true)
 
-        for id in _.difference(@pluck('id'), @visible)
+        for id in _.difference(@pluck('id'), visible)
             if not @findWhere(id: id)
                 console.log 'not found:', id
             @findWhere(id: id)?.set(visible: false)
