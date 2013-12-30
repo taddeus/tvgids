@@ -31,6 +31,10 @@ html, body
             color: #fff
             background-color: #1a1a1a
 
+        &.disabled
+            color: #676767
+            cursor: default
+
 .guide
     width: 100%
     height: 100%
@@ -119,3 +123,18 @@ html, body
         height: $channel-height - 10px
         margin-bottom: 2px
         border-right: 1px solid #bbb
+
+.select-channels
+    margin-top: 38px
+
+    label
+        padding: 5px
+        margin: 4px 4px 0 0
+        display: inline-block
+        background-color: #f1f1f1
+
+        &.disabled
+            opacity: 0.5
+
+    button
+        margin: 6px 0 6px 6px

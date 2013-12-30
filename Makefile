@@ -1,4 +1,4 @@
-ALL := style.css guide.js
+ALL := style.css guide.js settings.js
 
 .PHONY: all clean
 

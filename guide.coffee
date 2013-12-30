@@ -2,10 +2,10 @@
 # Config
 #
 
-#FETCH_URL = 'http://www.tvgids.nl/json/lists/programs.php'
 FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
 CHANNEL_LABEL_WIDTH = 180
+STORAGE_NAME = 'tvgids-channels'
 #SCROLL_MULTIPLIER = HOUR_WIDTH
 
 #
@@ -38,8 +38,8 @@ Program = Backbone.Model.extend(
         sort: ''
         start: 0
         end: 0
-        #article_id: null
-        #article_title: null
+        article_id: null
+        article_title: null
 )
 
 ChannelList = Backbone.Collection.extend(
@@ -47,30 +47,25 @@ ChannelList = Backbone.Collection.extend(
     comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
     initialize: (models, options) ->
-        @fetchVisible()
+        @visible = if localStorage.hasOwnProperty(STORAGE_NAME) \
+            then localStorage.getItem(STORAGE_NAME).split(',') else @pluck('id')
 
     fetch: ->
         @reset(CHANNELS)
         #@reset(CHANNELS.slice(0,3))
         #$.getJSON('channels.php', (data) => @reset(data))
+        @propagateVisible()
 
-    fetchVisible: ->
-        visible = if localStorage.hasOwnProperty('channels') \
-            then localStorage.getItem('channels').split(',') else @pluck('id')
-        @setVisible(visible)
+    propagateVisible: ->
+        for id in @visible
+            if @length and not @findWhere(id: id)
+                console.log 'not found:', id, typeof id, typeof @at(0).get('id')
+            @findWhere(id: id)?.set(visible: true)
 
-    saveVisible: ->
-        selected = (c.id for c in @channels if c.visible)
-        localStorage.setItem('channels', selected.join(','))
-
-    setVisible: (visible, save=false) ->
-        for id in visible
-            @findWhere(id: id).set(visible: true)
-
-        for id in _.difference(@pluck('id'), visible)
-            @findWhere(id: id).set(visible: false)
-
-        @saveVisible() if save
+        for id in _.difference(@pluck('id'), @visible)
+            if not @findWhere(id: id)
+                console.log 'not found:', id
+            @findWhere(id: id)?.set(visible: false)
 
     fetchPrograms: (day) ->
         $.getJSON(
@@ -86,8 +81,8 @@ ChannelList = Backbone.Collection.extend(
                             sort: p.soort
                             start: Date.parse(p.datum_start)
                             end: Date.parse(p.datum_end)
-                            #article_id: p.artikel_id
-                            #article_title: p.artikel_titel
+                            article_id: p.artikel_id
+                            article_title: p.artikel_titel
                         ) for p in programs
                     ))
         )
@@ -100,7 +95,6 @@ ChannelList = Backbone.Collection.extend(
 ChannelView = Backbone.View.extend(
     tagName: 'div'
     className: 'channel'
-    #template: _.template($('#channel-template').html())
 
     initialize: ->
         @listenTo(@model, 'change:programs', @render)
@@ -153,11 +147,16 @@ ChannelLabelView = Backbone.View.extend(
     addChannels: ->
         @$el.empty()
         Channels.each((channel) ->
-            @$el.append('<div class="label">' + channel.get('name') + '</div>')
+            elem = $('<div id="label-' + channel.get('id') + '" class="label"/>')
+            elem.html(channel.get('name')).toggle(channel.get('visible')).appendTo(@el)
+            @listenTo(channel, 'change:visible', -> @toggleVisible(channel))
         , @)
 
     moveTop: (delta) ->
         @$el.css('top', (@$el.position().top - delta) + 'px')
+
+    toggleVisible: (channel) ->
+        @$('#label-' + channel.get('id')).toggle(channel.get('visible'))
 )
 
 AppView = Backbone.View.extend(

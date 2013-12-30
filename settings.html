@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <title>TV gids - Selecteer zenders</title>
+        <link href="style.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navbar">
+            <a href="javascript:void(0);" id="yesterday" class="navitem disabled">Gisteren</a>
+            <a href="index.html" id="today" class="navitem">Vandaag</a>
+            <a href="javascript:void(0);" id="tomorrow" class="navitem disabled">Morgen</a>
+            <a href="settings.html" class="navitem active">Selecteer zenders</a>
+        </div>
+
+        <form id="select-channels" class="select-channels">
+            <div class="options"></div>
+            <button id="select-all">Selecteer alle</button>
+            <button id="select-none">Deselecteer alle</button>
+        </form>
+
+        <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="lib/underscore-min.js" type="text/javascript"></script>
+        <script src="channels.js" type="text/javascript"></script>
+        <script src="settings.js" type="text/javascript"></script>
+    </body>
+</html>
