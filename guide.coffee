@@ -44,7 +44,7 @@ Program = Backbone.Model.extend(
 
 ChannelList = Backbone.Collection.extend(
     model: Channel
-    comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
+    #comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
     fetch: ->
         @reset(CHANNELS)
