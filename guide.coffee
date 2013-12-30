@@ -5,7 +5,7 @@
 #FETCH_URL = 'http://www.tvgids.nl/json/lists/programs.php'
 FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
-SCROLL_MULTIPLIER = HOUR_WIDTH
+#SCROLL_MULTIPLIER = HOUR_WIDTH
 
 #
 # Utils
@@ -47,7 +47,6 @@ ChannelList = Backbone.Collection.extend(
 
     initialize: (models, options) ->
         #_.each(CHANNELS, (props, id) => @add(_.extend({id: id}, props)))
-
         @fetchVisible()
         #@fetchPrograms(0)
 
@@ -155,6 +154,7 @@ AppView = Backbone.View.extend(
 
     initialize: ->
         @updateIndicator()
+        @centerIndicator()
         @listenTo(Channels, 'reset', @addChannels)
 
         Channels.fetch()
@@ -179,6 +179,9 @@ AppView = Backbone.View.extend(
 
     updateIndicator: ->
         @$('.indicator').css('left', time2px(seconds_today(Date.now())) + 'px')
+
+    centerIndicator: ->
+        @el.scrollLeft = @$('.indicator').position().left - @$el.width() / 2
 
     fetchPrograms: ->
         Channels.fetchPrograms(Settings.get('day'))
