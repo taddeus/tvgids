@@ -110,12 +110,22 @@ html, body
             &:hover
                 color: #bcbcbc
 
-            &.favourite
+        &:hover .favlink
+            visibility: visible
+
+        &.favourite
+            background-color: rgb(250, 218, 160)
+
+            .favlink
                 color: orange
                 visibility: visible
 
-        &:hover .favlink
-            visibility: visible
+            &.past
+                background-color: rgba(250, 218, 160, 0.5)
+                color: rgb(131, 131, 131)
+
+                .favlink
+                    color: rgba(255, 165, 0, 0.5)
 
 .indicator
     position: absolute

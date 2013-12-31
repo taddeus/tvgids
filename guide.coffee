@@ -150,7 +150,7 @@ ProgramView = Backbone.View.extend(
 
     updateFavlink: ->
         isfav = Settings.isFavouriteProgram(@model.get('title'))
-        @$fav.toggleClass('favourite', isfav)
+        @$el.toggleClass('favourite', isfav)
 
     render: ->
         if @model.get('start') <= Date.now()
