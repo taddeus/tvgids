@@ -7,7 +7,7 @@ HOUR_WIDTH = 200
 CHANNEL_LABEL_WIDTH = 180
 STORAGE_CHANNELS = 'tvgids-channels'
 STORAGE_PROGRAMS = 'tvgids-programs'
-#SCROLL_MULTIPLIER = HOUR_WIDTH
+DEFAULT_CHANNELS = _.map([1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18], String)
 
 #
 # Utils
@@ -289,8 +289,7 @@ AppView = Backbone.View.extend(
 Settings = new (Backbone.Model.extend(
     defaults:
         day: 0
-        favourite_channels: load_stored_list(STORAGE_CHANNELS,
-                                             _.pluck(CHANNELS, 'id'))
+        favourite_channels: load_stored_list(STORAGE_CHANNELS, DEFAULT_CHANNELS)
         favourite_programs: load_stored_list(STORAGE_PROGRAMS, [])
         selected_program: null
 
