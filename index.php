@@ -18,7 +18,6 @@ function getwday($day) {
             <div class="channels">
             </div>
             <div class="indicator"></div>
-            <div class="channel-labels"></div>
             <div class="timeline-bg"></div>
             <div class="timeline">
                 <div class="hour">00:00</div>
@@ -47,6 +46,7 @@ function getwday($day) {
                 <div class="hour">23:00</div>
             </div>
         </div>
+        <div id="channel-labels" class="channel-labels"></div>
 
         <div id="loading-screen" class="loading-screen">
             <div class="bg"></div>
@@ -86,6 +86,12 @@ function getwday($day) {
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
         <script src="lib/underscore-min.js" type="text/javascript"></script>
         <script src="lib/backbone-min.js" type="text/javascript"></script>
+
+        <!--<script src="lib/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+        <script src="lib/jquery.kinetic.min.js" type="text/javascript"></script>
+        <script src="lib/jquery.smoothTouchScroll.min.js" type="text/javascript"></script>
+
+        <script src="lib/iscroll-lite.js" type="text/javascript"></script>-->
 
         <script src="channels.js" type="text/javascript"></script>
         <script src="guide.js" type="text/javascript"></script>

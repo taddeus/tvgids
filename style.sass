@@ -40,6 +40,12 @@ html, body
     max-height: 100%
     overflow-x: scroll
     position: relative
+    -webkit-overflow-scrolling: touch
+
+    .scroll-wrapper
+        width: 100%
+        height: 100%
+        position: relative
 
 .timeline-bg
     width: 100%
@@ -136,7 +142,7 @@ html, body
 
 .channel-labels
     width: $channel-label-width - 2px
-    position: fixed
+    position: absolute
     top: $header-height
     left: 0
     border-right: 2px solid #fff

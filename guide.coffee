@@ -170,7 +170,7 @@ ProgramView = Backbone.View.extend(
 )
 
 ChannelLabelsView = Backbone.View.extend(
-    el: $('#guide .channel-labels')
+    el: $('#channel-labels')
 
     initialize: (options) ->
         @listenTo(Channels, 'reset', @addChannels)
@@ -234,6 +234,12 @@ AppView = Backbone.View.extend(
 
         @labelview = new ChannelLabelsView(app: @)
         @detailsview = new ProgramDetailsView(app: @)
+
+        #@$el.smoothTouchScroll(
+        #    scrollableAreaClass: 'channels'
+        #    scrollWrapperClass: 'guide'
+        #)
+        #@iscroll = new iScroll('guide', vScroll: false, hScrollbar: true)
 
         $('#beforeyesterday').click(-> Settings.set(day: -2))
         $('#yesterday').click(-> Settings.set(day: -1))
