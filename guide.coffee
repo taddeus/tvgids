@@ -71,6 +71,7 @@ ChannelList = Backbone.Collection.extend(
             @findWhere(id: id)?.set(visible: false)
 
     fetchPrograms: (day) ->
+        $('#loading-screen').show()
         $.getJSON(
             FETCH_URL
             channels: @pluck('id').join(','), day: day
@@ -88,6 +89,7 @@ ChannelList = Backbone.Collection.extend(
                             article_title: p.artikel_titel
                         ) for p in programs
                     ))
+                $('#loading-screen').hide()
         )
 )
 
@@ -156,7 +158,7 @@ ProgramView = Backbone.View.extend(
                 @$el.addClass('current')
 )
 
-ChannelLabelView = Backbone.View.extend(
+ChannelLabelsView = Backbone.View.extend(
     el: $('.channel-labels')
 
     initialize: (options) ->
@@ -200,11 +202,11 @@ AppView = Backbone.View.extend(
         @listenTo(Channels, 'reset', @addChannels)
         @listenTo(Settings, 'change:day', @fetchPrograms)
 
-        @labelview = new ChannelLabelView(app: @)
+        @labelview = new ChannelLabelsView(app: @)
 
-        @updateIndicator()
-        @centerIndicator()
         Channels.fetch()
+        @centerIndicator()
+        @updateIndicator()
         setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
 
     addChannels: ->
@@ -214,7 +216,7 @@ AppView = Backbone.View.extend(
             view.render()
             @$('.channels').append(view.el)
         , @)
-        @$('.indicator').height(@$('.channels').height())
+        @updateIndicator()
         @fetchPrograms()
 
     loadDay: (day) ->
@@ -224,7 +226,9 @@ AppView = Backbone.View.extend(
 
     updateIndicator: ->
         left = time2px(seconds_today(Date.now())) + CHANNEL_LABEL_WIDTH - 1
-        @$('.indicator').css('left', left + 'px')
+        @$('.indicator')
+            .css('left', left + 'px')
+            .height(@$('.channels').height() - 2)
 
     centerIndicator: ->
         @$el.scrollLeft(@$('.indicator').position().left - @$el.width() / 2)

@@ -37,7 +37,7 @@ html, body
 
 .guide
     width: 100%
-    height: 100%
+    //height: 100%
     overflow-x: scroll
     position: relative
 
@@ -116,7 +116,6 @@ html, body
         &:hover .favlink
             visibility: visible
 
-
 .indicator
     position: absolute
     width: 1px
@@ -156,3 +155,28 @@ html, body
 
     button
         margin: 6px 0 6px 6px
+
+$loader-size: 66px
+
+.loading-screen
+    display: none
+    position: fixed
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+
+    .bg
+        width: 100%
+        height: 100%
+        background-color: #000
+        opacity: 0.8
+
+    .loader
+        position: absolute
+        width: $loader-size
+        height: $loader-size
+        top: 50%
+        left: 50%
+        margin: (-$loader-size / 2) 0 0 (-$loader-size / 2)
+        background: url("loading.gif") no-repeat left top
