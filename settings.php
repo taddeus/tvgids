@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Amsterdam');
 function getwday($day) {
     $wdays = array('zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag',
                    'vrijdag', 'zaterdag');
