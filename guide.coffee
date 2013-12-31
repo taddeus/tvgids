@@ -197,9 +197,11 @@ AppView = Backbone.View.extend(
 
         @labelview = new ChannelLabelsView(app: @)
 
+        $('#beforeyesterday').click(-> Settings.set(day: -2))
         $('#yesterday').click(-> Settings.set(day: -1))
         $('#today').click(-> Settings.set(day: 0))
         $('#tomorrow').click(-> Settings.set(day: 1))
+        $('#overmorrow').click(-> Settings.set(day: 2))
 
         Channels.fetch()
         @centerIndicator()
@@ -233,7 +235,7 @@ AppView = Backbone.View.extend(
         Channels.fetchPrograms(day)
         @updateIndicator()
         $('.navbar .active').removeClass('active')
-        $($('.navbar .navitem')[day + 1]).addClass('active')
+        $($('.navbar .navitem')[day + 2]).addClass('active')
 
     moveTimeline: ->
         if @$el.scrollTop() != @prevScrollTop

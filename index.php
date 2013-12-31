@@ -1,3 +1,10 @@
+<?php
+function getwday($day) {
+    $wdays = array('zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag',
+                   'vrijdag', 'zaterdag');
+   return ucfirst($wdays[getdate(time() + $day * 24 * 60 * 60)['wday']]);
+}
+?>
 <!doctype html>
 <html>
     <head>
@@ -46,10 +53,14 @@
         </div>
 
         <div class="navbar">
+            <a href="javascript:void(0);" id="beforeyesterday"
+                class="navitem"><?php echo getwday(-2) ?></a>
             <a href="javascript:void(0);" id="yesterday" class="navitem">Gisteren</a>
             <a href="javascript:void(0);" id="today" class="navitem active">Vandaag</a>
             <a href="javascript:void(0);" id="tomorrow" class="navitem">Morgen</a>
-            <a href="settings.html" class="navitem">Selecteer zenders</a>
+            <a href="javascript:void(0);" id="overmorrow"
+                class="navitem"><?php echo getwday(2) ?></a>
+            <a href="settings.php" class="navitem">Selecteer zenders</a>
         </div>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
