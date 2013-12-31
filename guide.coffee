@@ -77,7 +77,7 @@ ChannelList = Backbone.Collection.extend(
         $('#loading-screen').show()
         $.getJSON(
             FETCH_URL
-            channels: @pluck('id').join(','), day: day
+            channels: Settings.get('favourite_channels').join(','), day: day
             (channels) ->
                 _.each channels, (programs, id) ->
                     channel = Channels.findWhere(id: id)
