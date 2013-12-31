@@ -42,6 +42,7 @@ Channel = Backbone.Model.extend(
 
 Program = Backbone.Model.extend(
     defaults:
+        id: null
         title: 'Some program'
         genre: ''
         sort: ''
@@ -82,6 +83,7 @@ ChannelList = Backbone.Collection.extend(
                     channel = Channels.findWhere(id: id)
                     channel.set(programs: (
                         new Program(
+                            id: p.db_id
                             title: p.titel
                             genre: p.genre
                             sort: p.soort
@@ -125,6 +127,7 @@ ProgramView = Backbone.View.extend(
 
     events:
         'click .favlink': 'toggleFavourite'
+        'click': -> Settings.set(selected_program: @model.get('id'))
 
     initialize: ->
         $('<span class="title"/>').text(@model.get('title')).appendTo(@el)
@@ -145,8 +148,9 @@ ProgramView = Backbone.View.extend(
 
         @listenTo(Settings, 'change:favourite_programs', @updateFavlink)
 
-    toggleFavourite: ->
+    toggleFavourite: (e) ->
         Settings.toggleFavouriteProgram(@model.get('title'))
+        e.stopPropagation()
 
     updateFavlink: ->
         isfav = Settings.isFavouriteProgram(@model.get('title'))
@@ -161,7 +165,7 @@ ProgramView = Backbone.View.extend(
 )
 
 ChannelLabelsView = Backbone.View.extend(
-    el: $('.channel-labels')
+    el: $('#guide .channel-labels')
 
     initialize: (options) ->
         @listenTo(Channels, 'reset', @addChannels)
@@ -182,6 +186,34 @@ ChannelLabelsView = Backbone.View.extend(
         @$('#label-' + channel.get('id')).toggle(channel.get('visible'))
 )
 
+ProgramDetailsView = Backbone.View.extend(
+    el: $('#program-details')
+    template: _.template($('#details-template').html())
+
+    events:
+        'click .bg': -> Settings.set(selected_program: null)
+
+    initialize: (options) ->
+        @listenTo(Settings, 'change:selected_program', @toggleDetails)
+
+    toggleDetails: ->
+        id = Settings.get('selected_program')
+
+        if id
+            $('#loading-screen').show()
+            $.getJSON(
+                'details.php'
+                id: id
+                (data) =>
+                    $('#loading-screen').hide()
+                    @$el.show()
+                    @$('.content').html(@template(_.extend(id: id, data)))
+            )
+        else
+            @$el.hide()
+            @$('.content').empty()
+)
+
 AppView = Backbone.View.extend(
     el: $('#guide')
 
@@ -196,6 +228,7 @@ AppView = Backbone.View.extend(
         @listenTo(Settings, 'change:day', @fetchPrograms)
 
         @labelview = new ChannelLabelsView(app: @)
+        @detailsview = new ProgramDetailsView(app: @)
 
         $('#beforeyesterday').click(-> Settings.set(day: -2))
         $('#yesterday').click(-> Settings.set(day: -1))
@@ -254,6 +287,7 @@ Settings = new (Backbone.Model.extend(
         favourite_channels: load_stored_list(STORAGE_CHANNELS,
                                              _.pluck(CHANNELS, 'id'))
         favourite_programs: load_stored_list(STORAGE_PROGRAMS, [])
+        selected_program: null
 
     toggleFavouriteProgram: (title) ->
         list = @get('favourite_programs')

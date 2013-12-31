@@ -64,6 +64,25 @@ function getwday($day) {
             <a href="settings.php" class="navitem">Selecteer zenders</a>
         </div>
 
+        <div id="program-details" class="program-details">
+            <div class="bg"></div>
+            <div class="content"></div>
+        </div>
+
+        <script type="text/template" id="details-template">
+            <ul class="properties">
+                <% _.each(properties, function(p) { %>
+                <li>
+                    <strong><%= p.name %>:</strong>
+                    <%= p.value %>
+                </li>
+                <% }) %>
+            </ul>
+            <div class="description"><%= description %></div>
+            Zie ook de <a href="http://www.tvgids.nl/programma/<%= id %>"
+                target="_blank">details</a> op tvgids.nl.
+        </script>
+
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
         <script src="lib/underscore-min.js" type="text/javascript"></script>
         <script src="lib/backbone-min.js" type="text/javascript"></script>

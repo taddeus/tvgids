@@ -169,7 +169,7 @@ html, body
 
 $loader-size: 66px
 
-.loading-screen
+.loading-screen, .program-details
     display: none
     position: fixed
     width: 100%
@@ -183,11 +183,32 @@ $loader-size: 66px
         background-color: #000
         opacity: 0.8
 
-    .loader
-        position: absolute
-        width: $loader-size
-        height: $loader-size
-        top: 50%
-        left: 50%
-        margin: (-$loader-size / 2) 0 0 (-$loader-size / 2)
-        background: url("loading.gif") no-repeat left top
+.loading-screen .loader
+    position: absolute
+    width: $loader-size
+    height: $loader-size
+    top: 50%
+    left: 50%
+    margin: (-$loader-size / 2) 0 0 (-$loader-size / 2)
+    background: url("loading.gif") no-repeat left top
+
+$details-width: 480px
+
+.program-details .content
+    position: absolute
+    background: white
+    top: 50%
+    left: 50%
+    width: $details-width
+    margin: -150px 0 0 (-$details-width / 2)
+    border-radius: 6px
+    padding: 10px 15px
+    font: 12px/18px Helvetica
+
+    .properties
+        padding-left: 15px
+        margin-top: 1px
+
+        strong
+            display: inline-block
+            width: 70px
