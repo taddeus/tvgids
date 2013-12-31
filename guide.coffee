@@ -13,7 +13,9 @@ STORAGE_PROGRAMS = 'tvgids-programs'
 # Utils
 #
 
-seconds_today = (time) -> (time - (new Date()).setHours(0, 0, 0, 0)) / 1000
+day_start = -> (new Date()).setHours(0, 0, 0, 0)
+day_offset = -> Settings.get('day') * 24 * 60 * 60 * 1000
+seconds_today = (time) -> (time - day_start() - day_offset()) / 1000
 time2px = (seconds) -> HOUR_WIDTH / 3600 * seconds
 zeropad = (digit) -> if digit < 10 then '0' + digit else String(digit)
 format_time = (time) ->
@@ -185,16 +187,7 @@ AppView = Backbone.View.extend(
 
     events:
         # TODO: move to initialize
-        'click #yesterday': -> @loadDay(-1)
-        'click #today': -> @loadDay(0)
-        'click #tomorrow': -> @loadDay(1)
         'scroll': 'moveTimeline'
-
-    moveTimeline: ->
-        if @$el.scrollTop() != @prevScrollTop
-            @trigger('scroll', @$el.scrollTop() - @prevScrollTop)
-            @prevScrollTop = @$el.scrollTop()
-            @$('.timeline').css('top', (@$el.scrollTop() + 37) + 'px')
 
     initialize: ->
         @prevScrollTop = null
@@ -204,10 +197,14 @@ AppView = Backbone.View.extend(
 
         @labelview = new ChannelLabelsView(app: @)
 
+        $('#yesterday').click(-> Settings.set(day: -1))
+        $('#today').click(-> Settings.set(day: 0))
+        $('#tomorrow').click(-> Settings.set(day: 1))
+
         Channels.fetch()
         @centerIndicator()
         @updateIndicator()
-        setInterval((=> @updateIndicator()), 3600000 / HOUR_WIDTH)
+        setInterval((=> @updateIndicator()), 60 * 60 * 1000 / HOUR_WIDTH)
 
     addChannels: ->
         @$('.channels > .channel').remove()
@@ -216,25 +213,33 @@ AppView = Backbone.View.extend(
             view.render()
             @$('.channels').append(view.el)
         , @)
-        @updateIndicator()
         @fetchPrograms()
 
-    loadDay: (day) ->
-        Settings.set(day: day)
-        @$('.navbar .active').removeClass('active')
-        $(@$('.navbar .navitem')[day + 1]).addClass('active')
-
     updateIndicator: ->
-        left = time2px(seconds_today(Date.now())) + CHANNEL_LABEL_WIDTH - 1
-        @$('.indicator')
-            .css('left', left + 'px')
-            .height(@$('.channels').height() - 2)
+        if Settings.get('day') == 0
+            left = time2px(seconds_today(Date.now())) + CHANNEL_LABEL_WIDTH - 1
+            @$('.indicator')
+                .css('left', left + 'px')
+                .height(@$('.channels').height() - 2)
+                .show()
+        else
+            @$('.indicator').hide()
 
     centerIndicator: ->
         @$el.scrollLeft(@$('.indicator').position().left - @$el.width() / 2)
 
     fetchPrograms: ->
-        Channels.fetchPrograms(Settings.get('day'))
+        day = Settings.get('day')
+        Channels.fetchPrograms(day)
+        @updateIndicator()
+        $('.navbar .active').removeClass('active')
+        $($('.navbar .navitem')[day + 1]).addClass('active')
+
+    moveTimeline: ->
+        if @$el.scrollTop() != @prevScrollTop
+            @trigger('scroll', @$el.scrollTop() - @prevScrollTop)
+            @prevScrollTop = @$el.scrollTop()
+            @$('.timeline').css('top', (@$el.scrollTop() + 37) + 'px')
 )
 
 #
