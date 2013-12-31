@@ -21,6 +21,11 @@ zeropad = (digit) -> if digit < 10 then '0' + digit else String(digit)
 format_time = (time) ->
     date = new Date(time)
     zeropad(date.getHours()) + ':' + zeropad(date.getMinutes())
+parse_date = (str) ->
+    [date, time] = str.split(' ')
+    [year, month, day] = date.split('-')
+    [hours, minutes, seconds] = time.split(':')
+    (new Date(year, month - 1, day, hours, minutes, seconds)).getTime()
 
 store_list = (name, values) -> localStorage.setItem(name, values.join(';'))
 load_stored_list = (name, def) ->
@@ -87,8 +92,8 @@ ChannelList = Backbone.Collection.extend(
                             title: p.titel
                             genre: p.genre
                             sort: p.soort
-                            start: Date.parse(p.datum_start)
-                            end: Date.parse(p.datum_end)
+                            start: parse_date(p.datum_start)
+                            end: parse_date(p.datum_end)
                             article_id: p.artikel_id
                             article_title: p.artikel_titel
                         ) for p in programs
