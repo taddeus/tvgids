@@ -13,3 +13,4 @@ Issues & TODO
 -------------
 - Some channels show no programs.
 - The guide currently only works in Google Chrome.
+- Load and render the first set of programs in PHP, maybe that's faster.
