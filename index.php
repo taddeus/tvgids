@@ -75,6 +75,11 @@ function getwday($day) {
             <div class="content"></div>
         </div>
 
+        <div class="copyright">
+             &copy; Tadde&uuml;s Kroes 2013. Data wordt opgehaald van
+            <a href="http://www.tvgids.nl/" target="_blank">tvgids.nl</a>.
+        </div>
+
         <script type="text/template" id="details-template">
             <ul class="properties">
                 <% _.each(properties, function(p) { %>
