@@ -3,6 +3,8 @@ $hour-width: 200px
 $channel-height: 34px
 $header-height: 64px
 $channel-label-width: 180px
+$hours-before: 2
+$hours-after: 2
 
 html, body
     width: 100%
@@ -56,7 +58,7 @@ html, body
     background-color: #fdfdfd
 
 .timeline
-    width: 24 * $hour-width
+    width: ($hours-before + 24 + $hours-after) * $hour-width
     height: 26px
     position: absolute
     top: 38px
@@ -78,7 +80,7 @@ html, body
 
 .channels
     margin: $header-height 0 0 ($channel-label-width - 1px)
-    width: 24 * $hour-width
+    width: ($hours-before + 24 + $hours-after) * $hour-width
     overflow: hidden
 
 .channel
@@ -219,3 +221,7 @@ $details-width: 480px
         strong
             display: inline-block
             width: 70px
+
+.select-label
+    margin-left: 10px
+    font: 13px/17px Arial

@@ -26,8 +26,10 @@ function getwday($day) {
 
         <form id="select-channels" class="select-channels">
             <div class="options"></div>
-            <button id="select-all">Selecteer alle</button>
-            <button id="select-none">Selecteer geen</button>
+            <span class="select-label">Selecteer:</span>
+            <button id="select-all">Alle</button>
+            <button id="select-none">Geen</button>
+            <button id="select-default">Standaard</button>
         </form>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>

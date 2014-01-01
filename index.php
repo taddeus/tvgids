@@ -20,6 +20,9 @@ function getwday($day) {
             <div class="indicator"></div>
             <div class="timeline-bg"></div>
             <div class="timeline">
+                <div class="hour">22:00</div>
+                <div class="hour">23:00</div>
+
                 <div class="hour">00:00</div>
                 <div class="hour">01:00</div>
                 <div class="hour">02:00</div>
@@ -44,6 +47,9 @@ function getwday($day) {
                 <div class="hour">21:00</div>
                 <div class="hour">22:00</div>
                 <div class="hour">23:00</div>
+
+                <div class="hour">00:00</div>
+                <div class="hour">01:00</div>
             </div>
         </div>
         <div id="channel-labels" class="channel-labels"></div>

@@ -2,12 +2,12 @@
 # Config
 #
 
-FETCH_URL = 'programs.php'
 HOUR_WIDTH = 200
 CHANNEL_LABEL_WIDTH = 180
 STORAGE_CHANNELS = 'tvgids-channels'
 STORAGE_PROGRAMS = 'tvgids-programs'
 DEFAULT_CHANNELS = _.map([1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18], String)
+HOURS_BEFORE = HOURS_AFTER = 2
 
 #
 # Utils
@@ -81,7 +81,7 @@ ChannelList = Backbone.Collection.extend(
     fetchPrograms: (day) ->
         $('#loading-screen').show()
         $.getJSON(
-            FETCH_URL
+            'programs.php'
             channels: Settings.get('favourite_channels').join(','), day: day
             (channels) ->
                 _.each channels, (programs, id) ->
@@ -144,10 +144,11 @@ ProgramView = Backbone.View.extend(
         @$fav.attr('title', 'Als favoriet instellen')
         @updateFavlink()
 
-        left = time2px(Math.max(0, seconds_today(@model.get('start'))))
+        left = time2px(Math.max(-HOURS_BEFORE * 60 * 60,
+                                seconds_today(@model.get('start'))))
         width = time2px(seconds_today(@model.get('end'))) - left
         @$el.css(
-            left: left + 'px'
+            left: ((HOURS_BEFORE * HOUR_WIDTH) + left) + 'px'
             width: (width - 10) + 'px'
         )
 
@@ -265,7 +266,7 @@ AppView = Backbone.View.extend(
         if Settings.get('day') == 0
             left = time2px(seconds_today(Date.now())) + CHANNEL_LABEL_WIDTH - 1
             @$('.indicator')
-                .css('left', left + 'px')
+                .css(left: ((HOURS_BEFORE * HOUR_WIDTH) + left) + 'px')
                 .height(@$('.channels').height() - 2)
                 .show()
         else
