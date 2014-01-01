@@ -97,7 +97,7 @@ ChannelList = Backbone.Collection.extend(
                             article_id: p.artikel_id
                             article_title: p.artikel_titel
                         ) for p in programs
-                    ))
+                    )) if channel?
                 $('#loading-screen').hide()
         )
 )
