@@ -79,6 +79,10 @@ ChannelList = Backbone.Collection.extend(
             @findWhere(id: id)?.set(visible: false)
 
     fetchPrograms: (day) ->
+        # Sometimes a program list is an object (PHP's json_encode() is
+        # probably given an associative array)
+        to_array = (o) -> if o.length? then o else _.map(o, ((v, k) -> v))
+
         $('#loading-screen').show()
         $.getJSON(
             'programs.php'
@@ -96,7 +100,7 @@ ChannelList = Backbone.Collection.extend(
                             end: parse_date(p.datum_end)
                             article_id: p.artikel_id
                             article_title: p.artikel_titel
-                        ) for p in programs
+                        ) for p in to_array(programs)
                     )) if channel?
                 $('#loading-screen').hide()
         )
