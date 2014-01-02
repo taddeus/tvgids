@@ -34,6 +34,14 @@ function getwday($day) {
             <button id="select-default">Standaard</button>
         </form>
 
+        <div class="copyright">
+             &copy; Tadde&uuml;s Kroes 2013
+            - data wordt verzorgd door
+            <a href="http://www.tvgids.nl" target="_blank">tvgids.nl</a>
+            - source code is te vinden op
+            <a href="https://github.com/taddeus/tvgids" target="_blank">Github</a>
+        </div>
+
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>
         <script src="lib/underscore-min.js" type="text/javascript"></script>
         <script src="channels.js" type="text/javascript"></script>
