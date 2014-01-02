@@ -10,6 +10,8 @@ function getwday($day) {
 <html>
     <head>
         <title>TV gids - Selecteer zenders</title>
+        <meta charset="utf-8">
+        <meta name="robots" content="noindex, nofollow">
         <link href="style.css" type="text/css" rel="stylesheet">
     </head>
     <body>
