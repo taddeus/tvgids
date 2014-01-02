@@ -15,7 +15,7 @@ Features
 - See programs from 2 days before and 2 days ahead.
 - Select favourite channels (saved using HTML5 local storage).
 - Click on a program to see detailed information (screen-scraped from
-  TVGids.nl)
+  TVGids.nl).
 - Select favourite programs, which remain highlighted in the future (saved
   using HTML5 local storage).
 
