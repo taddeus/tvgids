@@ -1,5 +1,6 @@
 STORAGE_CHANNELS = 'tvgids-channels'
-DEFAULT_CHANNELS = _.map([1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18], String)
+DEFAULT_CHANNELS = [1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18, 91]
+DEFAULT_CHANNELS = _.map(DEFAULT_CHANNELS, String)
 
 visible = if localStorage.hasOwnProperty(STORAGE_CHANNELS) \
     then localStorage.getItem(STORAGE_CHANNELS).split(';') \
