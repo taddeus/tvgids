@@ -11,7 +11,5 @@ A working version is available at http://tkroes.nl/tvgids/.
 
 Issues & TODO
 -------------
-- Some channels show no programs.
-- Load and render the first set of programs in PHP, maybe that's faster.
 - Add timestamp to favourite programs, and remove entries older than 7 days
   to prevent clogging
