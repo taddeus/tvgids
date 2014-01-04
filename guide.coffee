@@ -158,6 +158,7 @@ ProgramView = Backbone.View.extend(
         )
 
         @listenTo(Settings, 'change:favourite_programs', @updateFavlink)
+        @listenTo(Clock, 'tick', @render)
 
     toggleFavourite: (e) ->
         Settings.toggleFavouriteProgram(@model.get('title'))
@@ -171,6 +172,7 @@ ProgramView = Backbone.View.extend(
         if @model.get('start') <= Date.now()
             if @model.get('end') < Date.now()
                 @$el.removeClass('current').addClass('past')
+                @stopListening(Clock, 'tick')
             else
                 @$el.addClass('current')
 )
@@ -256,7 +258,7 @@ AppView = Backbone.View.extend(
         Channels.fetch()
         @centerIndicator()
         @updateIndicator()
-        setInterval((=> @updateIndicator()), 60 * 60 * 1000 / HOUR_WIDTH)
+        @listenTo(Clock, 'tick', @updateIndicator)
 
     addChannels: ->
         @$('.channels > .channel').remove()
@@ -320,5 +322,11 @@ Settings = new (Backbone.Model.extend(
     isFavouriteProgram: (title) ->
         _.contains(@get('favourite_programs'), title)
 ))()
+
+Clock = new (->
+    _.extend(@, Backbone.Events)
+    setInterval((=> @trigger('tick')), 60 * 60 * 1000 / HOUR_WIDTH)
+)()
+
 Channels = new ChannelList()
 App = new AppView()
