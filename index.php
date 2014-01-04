@@ -72,6 +72,18 @@ function getwday($day) {
             <a href="javascript:void(0);" id="overmorrow"
                 class="navitem"><?php echo getwday(2) ?></a>
             <a href="settings.php" class="navitem">Selecteer zenders</a>
+            <div id="help" class="navitem help">
+                <i class="icon-info-sign" title="Gebruiksaanwijzing"></i>
+                <div class="popup" id="help-popup">
+                    <ul>
+                        <li>Klik op een programma om details te zien.</li>
+                        <li>Klik op <i class="icon-heart"></i> bij een programma om deze
+                            in je favorieten te zetten. Dit wordt lokaal
+                            opgeslagen, dus je moet op elke andere computer je
+                            favorieten opnieuw instellen.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div id="program-details" class="program-details">

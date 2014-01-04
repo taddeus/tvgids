@@ -255,6 +255,9 @@ AppView = Backbone.View.extend(
         $('#tomorrow').click(-> Settings.set(day: 1))
         $('#overmorrow').click(-> Settings.set(day: 2))
 
+        $('#help').click((e) -> e.stopPropagation(); $('#help-popup').show())
+        $(document).click(-> $('#help-popup').hide())
+
         Channels.fetch()
         @centerIndicator()
         @updateIndicator()

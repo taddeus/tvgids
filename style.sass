@@ -37,6 +37,57 @@ html, body
             color: #666
             cursor: default
 
+    .help
+        position: relative
+        cursor: pointer
+
+        .popup
+            cursor: default
+            background-color: white
+            border-radius: 6px
+            padding: 0 15px
+            font: 12px/18px Helvetica
+            position: absolute
+            left: 8px
+            top: 39px
+            color: #333
+            width: 300px
+            display: none
+
+            ul
+                padding-left: 15px
+
+            // Arrow up (from Twitter Bootstrap)
+            background-color: white
+            border: 1px solid #ccc
+            border: 1px solid rgba(0, 0, 0, 0.2)
+            border-right-width: 2px
+            border-bottom-width: 2px
+            border-radius: 6px
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+            background-clip: padding-box
+
+            &:before
+                position: absolute
+                top: -7px
+                left: 9px
+                display: inline-block
+                border-right: 7px solid transparent
+                border-bottom: 7px solid #ccc
+                border-left: 7px solid transparent
+                border-bottom-color: rgba(0, 0, 0, 0.2)
+                content: ''
+
+            &:after
+                position: absolute
+                top: -6px
+                left: 10px
+                display: inline-block
+                border-right: 6px solid transparent
+                border-bottom: 6px solid #ffffff
+                border-left: 6px solid transparent
+                content: ''
+
 .guide
     width: 100%
     max-height: 100%
