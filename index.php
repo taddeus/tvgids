@@ -92,7 +92,7 @@ function getwday($day) {
         </div>
 
         <div class="copyright">
-             &copy; Tadde&uuml;s Kroes 2013
+            &copy; <a href="mailto:taddeus@kompiler.org">Tadde&uuml;s Kroes</a> 2013
             - data wordt verzorgd door
             <a href="http://www.tvgids.nl" target="_blank">TVGids.nl</a>
             - source code is te vinden op
