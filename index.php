@@ -14,6 +14,7 @@ function getwday($day) {
         <meta name="author" content="Taddeus Kroes">
         <meta name="robots" content="index, nofollow">
         <meta name="description" content="Een snelle, makkelijk te gebruiken TV gids voor Nederlandse televisie.">
+        <meta name="keywords" content="tvgids, TV, gids, Nederland, zender, programma">
         <link href="style.css" type="text/css" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
     </head>
