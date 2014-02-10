@@ -1,7 +1,8 @@
 <?php
 
 function clean_tag_content($text) {
-    return htmlentities($text, ENT_COMPAT | ENT_HTML5 | ENT_SUBSTITUTE, 'ISO-8859-1');
+    $text = html_entity_decode(utf8_encode($text), ENT_COMPAT | ENT_XHTML, 'utf-8');
+    return htmlentities($text, ENT_COMPAT | ENT_HTML5 | ENT_SUBSTITUTE, 'utf-8');
 }
 
 function clean_html($html) {
@@ -33,6 +34,7 @@ function clean_html($html) {
     if (!$in_tag)
         $cleaned .= clean_tag_content($stack);
 
+    //echo $cleaned . "\n\n";
     return $cleaned;
 }
 
@@ -61,6 +63,7 @@ $properties = array();
 foreach ($m3[1] as $i => $name)
     $properties[] = array('name' => $name, 'value' => $m3[2][$i]);
 
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode(compact('description', 'properties'), JSON_UNESCAPED_SLASHES);
 
 ?>
