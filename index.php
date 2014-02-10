@@ -110,8 +110,8 @@ function getwday($day) {
                 <% }) %>
             </ul>
             <div class="description"><%= description %></div>
-            Zie ook de <a href="http://www.tvgids.nl/programma/<%= id %>"
-                target="_blank">details</a> op tvgids.nl.
+            <p>Zie ook de <a href="http://www.tvgids.nl/programma/<%= id %>"
+                target="_blank">details</a> op tvgids.nl.</p>
         </script>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>

@@ -9,6 +9,7 @@ STORAGE_PROGRAMS = 'tvgids-programs'
 HOURS_BEFORE = HOURS_AFTER = 2
 DEFAULT_CHANNELS = [1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18, 91]
 DEFAULT_CHANNELS = _.map(DEFAULT_CHANNELS, String)
+DETAILS_WINDOW_PADDING = 22  # top/margin padding + border clean margin
 
 #
 # Utils
@@ -208,6 +209,8 @@ ProgramDetailsView = Backbone.View.extend(
 
     initialize: (options) ->
         @listenTo(Settings, 'change:selected_program', @toggleDetails)
+        @setBounds()
+        $(window).resize(=> @setBounds())
 
     toggleDetails: ->
         id = Settings.get('selected_program')
@@ -230,9 +233,14 @@ ProgramDetailsView = Backbone.View.extend(
             @$el.hide()
             @$('.content').empty()
 
+    setBounds: ->
+        max = $(window).height() - 2 * DETAILS_WINDOW_PADDING
+        @$('.content').css(maxHeight: max)
+        @alignMiddle()
+
     alignMiddle: ->
-        top = @$('.content').outerHeight() / 2
-        @$('.content').css(marginTop: "-#{top}px")
+        height = @$('.content').outerHeight()
+        @$('.content').css(marginTop: "-#{height / 2}px")
 )
 
 AppView = Backbone.View.extend(
