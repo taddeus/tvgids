@@ -221,14 +221,18 @@ ProgramDetailsView = Backbone.View.extend(
                     $('#loading-screen').hide()
                     @$el.show()
                     @$('.content').html(@template(_.extend(id: id, data)))
+                    @alignMiddle()
 
-                    # Vertically align in middle
-                    top = @$('.content').outerHeight() / 2
-                    @$('.content').css(marginTop: "-#{top}px")
+                    # Align again after images are loaded
+                    @$('.content img').load(=> @alignMiddle())
             )
         else
             @$el.hide()
             @$('.content').empty()
+
+    alignMiddle: ->
+        top = @$('.content').outerHeight() / 2
+        @$('.content').css(marginTop: "-#{top}px")
 )
 
 AppView = Backbone.View.extend(
