@@ -252,7 +252,8 @@ $loader-size: 66px
     margin: (-$loader-size / 2) 0 0 (-$loader-size / 2)
     background: url("loading.gif") no-repeat left top
 
-$details-width: 480px
+$details-width: 500px
+$details-initial-offset: 150px
 
 .program-details .content
     position: absolute
@@ -260,11 +261,14 @@ $details-width: 480px
     top: 50%
     left: 50%
     width: $details-width
-    margin: -150px 0 0 (-$details-width / 2)
+    margin: -$details-initial-offset 0 0 (-$details-width / 2)
     border-radius: 6px
     padding: 10px 15px
     font: 12px/18px Helvetica
     box-shadow: 0 0 7px 5px #0f0f0f
+
+    *
+        max-width: $details-width
 
     .properties
         padding-left: 15px

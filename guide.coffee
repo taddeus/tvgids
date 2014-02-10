@@ -221,6 +221,10 @@ ProgramDetailsView = Backbone.View.extend(
                     $('#loading-screen').hide()
                     @$el.show()
                     @$('.content').html(@template(_.extend(id: id, data)))
+
+                    # Vertically align in middle
+                    top = @$('.content').outerHeight() / 2
+                    @$('.content').css(marginTop: "-#{top}px")
             )
         else
             @$el.hide()
