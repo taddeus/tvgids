@@ -227,6 +227,7 @@ ProgramDetailsView = Backbone.View.extend(
                     @alignMiddle()
 
                     # Align again after images are loaded
+                    @$('.content img').load(-> $(@).css(height: 'auto'))
                     @$('.content img').load(=> @alignMiddle())
             )
         else

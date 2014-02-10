@@ -254,6 +254,7 @@ $loader-size: 66px
 
 $details-width: 500px
 $details-initial-offset: 150px
+$img-ratio: 310px / 550px
 
 .program-details .content
     position: absolute
@@ -271,6 +272,11 @@ $details-initial-offset: 150px
 
     *
         max-width: $details-width
+
+    // Set default image height, to be overwritten with 'auto' when the image
+    // is loaded. This prevents a shift of the details window on image load.
+    img
+        height: $details-width * $img-ratio
 
     .properties
         padding-left: 15px
