@@ -16,11 +16,11 @@ function clean_html($html) {
         case '<':
             $in_tag = true;
             $cleaned .= clean_tag_content($stack) . '<';
-            $stack = '';
             break;
         case '>':
             $in_tag = false;
             $cleaned .= '>';
+            $stack = '';
             break;
         default:
             if ($in_tag)
@@ -30,7 +30,8 @@ function clean_html($html) {
         }
     }
 
-    $cleaned .= $stack;
+    if (!$in_tag)
+        $cleaned .= clean_tag_content($stack);
 
     return $cleaned;
 }
