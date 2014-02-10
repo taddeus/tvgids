@@ -9,8 +9,8 @@ assert($m1);
 $description = strip_tags($m1[1], '<p><strong><em><b><i><font><a><span>');
 $description = str_replace('showVideoPlaybutton()', '', $description);
 $description = preg_replace('/\s+/', ' ', $description);
-$description = htmlentities($description, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'ISO-8859-1');
-$description = str_replace(array('&lt;', '&gt;'), array('<', '>'), $description);
+$description = htmlentities($description, ENT_COMPAT | ENT_HTML5 | ENT_SUBSTITUTE, 'ISO-8859-1');
+$description = str_replace(array('&lt;', '&gt;', '&sol;'), array('<', '>', '/'), $description);
 
 preg_match('/<ul\s+id="prog-info-content-colleft">\s*(.*?)\s*<\/ul>/s', $page, $m2);
 assert($m2);
