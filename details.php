@@ -47,7 +47,7 @@ $page = file_get_contents($url);
 // Parse detailed description, preserving a selected set of HTML tags
 preg_match('/<div\s+id="prog-content">\s*(.*?)\s*<div\s+class="prog-functionbar">/s', $page, $m1);
 assert($m1);
-$description = strip_tags($m1[1], '<p><strong><em><b><i><font><a><span><img>');
+$description = strip_tags($m1[1], '<p><strong><em><b><i><font><a><span><img><br>');
 $description = str_replace('showVideoPlaybutton()', '', $description);
 $description = clean_html($description);
 //$description = preg_replace('/\s+/', ' ', $description);
