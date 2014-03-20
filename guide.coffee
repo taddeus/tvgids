@@ -9,7 +9,7 @@ STORAGE_PROGRAMS = 'tvgids-programs'
 HOURS_BEFORE = HOURS_AFTER = 2
 DEFAULT_CHANNELS = [1, 2, 3, 4, 31, 46, 92, 36, 37, 34, 29, 18, 91]
 DEFAULT_CHANNELS = _.map(DEFAULT_CHANNELS, String)
-DETAILS_WINDOW_PADDING = 22  # top/margin padding + border clean margin
+DETAILS_WINDOW_PADDING = 22  # top/bottom margin between details div and window edge
 
 #
 # Utils
