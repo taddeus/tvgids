@@ -44,7 +44,7 @@ $url = 'http://www.tvgids.nl/programma/' . $_GET['id'];
 $page = file_get_contents($url);
 
 // Parse detailed description, preserving a selected set of HTML tags
-assert(preg_match('/<div\s+id="prog-content">\s*(.*?)\s*<div\s+class="prog-functionbar">/s', $page, $m1));
+assert(preg_match('%<div id="prog-content">\s*(.*?)\s*<br class="brclear"%s', $page, $m1));
 $description = strip_tags($m1[1], '<p><strong><em><b><i><font><a><span><img><br>');
 $description = str_replace('showVideoPlaybutton()', '', $description);
 $description = clean_html($description);
@@ -53,8 +53,9 @@ $description = clean_html($description);
 //$description = str_replace(array('&lt;', '&gt;', '&sol;'), array('<', '>', '/'), $description);
 
 // Parse properties list
-assert(preg_match('/<ul\s+id="prog-info-content-colleft">\s*(.*?)\s*<\/ul>/s', $page, $m2));
-assert(preg_match_all('/<li><strong>(\w+):<\/strong>(.*?)<\/li>/', $m2[1], $m3));
+assert(preg_match('%<ul\s+id="prog-info-content-colleft">\s*(.*?)\s*</ul>' .
+                  '(?:\s*<ul\s+id="prog-info-content-colright">\s*(.*?)\s*</ul>)?%s', $page, $m2));
+assert(preg_match_all('%<li><strong>([\w ]+):</strong>(.*?)</li>%', $m2[1] . $m2[2], $m3));
 $properties = array();
 foreach ($m3[1] as $i => $name)
     $properties[] = array('name' => $name, 'value' => $m3[2][$i]);
