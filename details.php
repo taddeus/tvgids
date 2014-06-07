@@ -63,8 +63,8 @@ $title = null;
 foreach ($m3[1] as $i => $name) {
     $value = $m3[2][$i];
 
-    // Add IMDB URL for movie/series
-    if ($value == 'Film' || $value == 'Serie/Soap') {
+    // Add IMDB URL for movies
+    if ($value == 'Film'/* || $value == 'Serie/Soap'*/) {
         $results = json_decode(file_get_contents($movie_search_url . urlencode($title)), true);
 
         if (count($results) > 0) {
