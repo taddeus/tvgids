@@ -57,8 +57,27 @@ assert(preg_match('%<ul\s+id="prog-info-content-colleft">\s*(.*?)\s*</ul>' .
                   '(?:\s*<ul\s+id="prog-info-content-colright">\s*(.*?)\s*</ul>)?%s', $page, $m2));
 assert(preg_match_all('%<li><strong>([\w ]+):</strong>(.*?)</li>%', $m2[1] . $m2[2], $m3));
 $properties = array();
-foreach ($m3[1] as $i => $name)
-    $properties[] = array('name' => $name, 'value' => $m3[2][$i]);
+$movie_search_url = 'http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=';
+$title = null;
+
+foreach ($m3[1] as $i => $name) {
+    $value = $m3[2][$i];
+
+    // Add IMDB URL for movie/series
+    if ($value == 'Film' || $value == 'Serie/Soap') {
+        $results = json_decode(file_get_contents($movie_search_url . urlencode($title)), true);
+
+        if (count($results) > 0) {
+            $lst = reset($results);
+            $id = $lst[0]['id'];
+            $value .= ' (<a href="http://www.imdb.com/title/' . $id . '" target="_blank">IMDB</a>)';
+        }
+    } elseif ($name == 'Titel') {
+        $title = $value;
+    }
+
+    $properties[] = array('name' => $name, 'value' => $value);
+}
 
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode(compact('description', 'properties'), JSON_UNESCAPED_SLASHES);
