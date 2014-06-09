@@ -318,7 +318,7 @@ AppView = Backbone.View.extend
 # Main
 #
 
-Settings = new do Backbone.Model.extend
+Settings = new (Backbone.Model.extend
     defaults:
         day: 0
         favourite_channels: load_stored_list(STORAGE_CHANNELS, DEFAULT_CHANNELS)
@@ -339,10 +339,12 @@ Settings = new do Backbone.Model.extend
 
     isFavouriteProgram: (title) ->
         _.contains(@get('favourite_programs'), title)
+)()
 
-Clock = new do ->
+Clock = new (->
     _.extend(@, Backbone.Events)
     setInterval((=> @trigger('tick')), 60 * 60 * 1000 / HOUR_WIDTH)
+)()
 
 Channels = new ChannelList()
 App = new AppView()
