@@ -39,15 +39,15 @@ load_stored_list = (name, def) ->
 # Models & collections
 #
 
-Channel = Backbone.Model.extend(
+Channel = Backbone.Model.extend
     defaults:
         id: null
         name: 'Some channel'
         visible: true
         programs: []
-)
 
-Program = Backbone.Model.extend(
+
+Program = Backbone.Model.extend
     defaults:
         id: null
         title: 'Some program'
@@ -57,9 +57,9 @@ Program = Backbone.Model.extend(
         end: 0
         article_id: null
         article_title: null
-)
 
-ChannelList = Backbone.Collection.extend(
+
+ChannelList = Backbone.Collection.extend
     model: Channel
     #comparator: (a, b) -> parseInt(a.get('id')) - parseInt(b.get('id'))
 
@@ -106,13 +106,12 @@ ChannelList = Backbone.Collection.extend(
                     )) if channel?
                 $('#loading-screen').hide()
         )
-)
 
 #
 # Views
 #
 
-ChannelView = Backbone.View.extend(
+ChannelView = Backbone.View.extend
     tagName: 'div'
     className: 'channel'
 
@@ -130,9 +129,9 @@ ChannelView = Backbone.View.extend(
 
     toggleVisible: ->
         @$el.toggle(@model.get('visible'))
-)
 
-ProgramView = Backbone.View.extend(
+
+ProgramView = Backbone.View.extend
     tagName: 'div'
     className: 'program'
 
@@ -176,9 +175,9 @@ ProgramView = Backbone.View.extend(
                 @stopListening(Clock, 'tick')
             else
                 @$el.addClass('current')
-)
 
-ChannelLabelsView = Backbone.View.extend(
+
+ChannelLabelsView = Backbone.View.extend
     el: $('#channel-labels')
 
     initialize: (options) ->
@@ -198,9 +197,9 @@ ChannelLabelsView = Backbone.View.extend(
 
     toggleVisible: (channel) ->
         @$('#label-' + channel.get('id')).toggle(channel.get('visible'))
-)
 
-ProgramDetailsView = Backbone.View.extend(
+
+ProgramDetailsView = Backbone.View.extend
     el: $('#program-details')
     template: _.template($('#details-template').html())
 
@@ -242,9 +241,9 @@ ProgramDetailsView = Backbone.View.extend(
     alignMiddle: ->
         height = @$('.content').outerHeight()
         @$('.content').css(marginTop: "-#{height / 2}px")
-)
 
-AppView = Backbone.View.extend(
+
+AppView = Backbone.View.extend
     el: $('#guide')
 
     events:
@@ -314,13 +313,12 @@ AppView = Backbone.View.extend(
             @trigger('scroll', @$el.scrollTop() - @prevScrollTop)
             @prevScrollTop = @$el.scrollTop()
             @$('.timeline').css('top', (@$el.scrollTop() + 37) + 'px')
-)
 
 #
 # Main
 #
 
-Settings = new (Backbone.Model.extend(
+Settings = new do Backbone.Model.extend
     defaults:
         day: 0
         favourite_channels: load_stored_list(STORAGE_CHANNELS, DEFAULT_CHANNELS)
@@ -341,12 +339,10 @@ Settings = new (Backbone.Model.extend(
 
     isFavouriteProgram: (title) ->
         _.contains(@get('favourite_programs'), title)
-))()
 
-Clock = new (->
+Clock = new do ->
     _.extend(@, Backbone.Events)
     setInterval((=> @trigger('tick')), 60 * 60 * 1000 / HOUR_WIDTH)
-)()
 
 Channels = new ChannelList()
 App = new AppView()
