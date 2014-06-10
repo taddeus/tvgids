@@ -29,8 +29,8 @@ function getwday($day) {
             <div class="timeline-bg"></div>
             <div class="timeline">
                 <?php
-                for ($i = 0, $l = 24 + $HOURS_BEFORE + $HOURS_AFTER; $i < $l; $i++)
-                    printf('<div class="hour">%02d:00</div>', ($i + 24 - $HOURS_BEFORE) % 24);
+                for ($i = -$HOURS_BEFORE; $i < 24 + $HOURS_AFTER; $i++)
+                    printf('<div class="hour">%02d:00</div>', ($i + 24) % 24);
                 ?>
             </div>
         </div>
