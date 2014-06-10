@@ -1,5 +1,4 @@
-#!/usr/bin/env sh
-
+#!/bin/sh
 hash inotifywait || (echo "Install inotify-tools first"; exit 1)
 
 make
