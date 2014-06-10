@@ -18,6 +18,7 @@ Features
   TVGids.nl).
 - Select favourite programs, which remain highlighted in the future (saved
   using HTML5 local storage).
+- An IMDB link is added to the details pane for movies.
 
 Issues & TODO
 -------------
