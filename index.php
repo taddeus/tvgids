@@ -1,5 +1,8 @@
 <?php
+$HOURS_BEFORE = $HOURS_AFTER = 2;
+
 date_default_timezone_set('Europe/Amsterdam');
+
 function getwday($day) {
     $wdays = array('zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag',
                    'vrijdag', 'zaterdag');
@@ -25,36 +28,10 @@ function getwday($day) {
             <div class="indicator"></div>
             <div class="timeline-bg"></div>
             <div class="timeline">
-                <div class="hour">22:00</div>
-                <div class="hour">23:00</div>
-
-                <div class="hour">00:00</div>
-                <div class="hour">01:00</div>
-                <div class="hour">02:00</div>
-                <div class="hour">03:00</div>
-                <div class="hour">04:00</div>
-                <div class="hour">05:00</div>
-                <div class="hour">06:00</div>
-                <div class="hour">07:00</div>
-                <div class="hour">08:00</div>
-                <div class="hour">09:00</div>
-                <div class="hour">10:00</div>
-                <div class="hour">11:00</div>
-                <div class="hour">12:00</div>
-                <div class="hour">13:00</div>
-                <div class="hour">14:00</div>
-                <div class="hour">15:00</div>
-                <div class="hour">16:00</div>
-                <div class="hour">17:00</div>
-                <div class="hour">18:00</div>
-                <div class="hour">19:00</div>
-                <div class="hour">20:00</div>
-                <div class="hour">21:00</div>
-                <div class="hour">22:00</div>
-                <div class="hour">23:00</div>
-
-                <div class="hour">00:00</div>
-                <div class="hour">01:00</div>
+                <?php
+                for ($i = 0, $l = 24 + $HOURS_BEFORE + $HOURS_AFTER; $i < $l; $i++)
+                    printf('<div class="hour">%02d:00</div>', ($i + 24 - $HOURS_BEFORE) % 24);
+                ?>
             </div>
         </div>
         <div id="channel-labels" class="channel-labels"></div>
