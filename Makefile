@@ -3,7 +3,7 @@ STYLES := style.css
 
 ALL := $(SCRIPTS) $(STYLES)
 
-.PHONY: all min clean
+.PHONY: all min clean channels channels.js
 
 all: $(ALL)
 
@@ -24,6 +24,11 @@ min: $(patsubst %,%.min,$(ALL))
 
 %.css.min: %.css
 	curl -X POST -s --data-urlencode input@$< http://cssminifier.com/raw > $@
+
+channels: channels.js
+channels.js:
+	wget -O $@ http://www.tvgids.nl/json/lists/channels.php
+	echo window.CHANNELS=`cat $@` > $@
 
 clean:
 	rm -f $(ALL)
