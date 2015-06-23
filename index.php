@@ -82,13 +82,16 @@ function getwday($day) {
                 <% _.each(properties, function(p) { %>
                 <li>
                     <strong><%= p.name %>:</strong>
-                    <%= p.value %>
+                    <%= p.description %>
                 </li>
                 <% }) %>
             </ul>
-            <div class="description"><%= description %></div>
-            <p>Zie ook de <a href="http://www.tvgids.nl/programma/<%= id %>"
-                target="_blank">details</a> op tvgids.nl.</p>
+            <div class="description">
+                <h2><%= title %></h2>
+                <p><%= description %></p>
+            </div>
+            <p>Zie ook de <a href="<%= url %>" target="_blank"
+                >details</a> op tvgids.nl.</p>
         </script>
 
         <script src="lib/jquery-1.10.2.min.js" type="text/javascript"></script>

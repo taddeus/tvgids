@@ -1,85 +1,64 @@
 <?php
 
-function clean_tag_content($text) {
-    $text = html_entity_decode(utf8_encode($text), ENT_COMPAT | ENT_XHTML, 'utf-8');
-    return htmlentities($text, ENT_COMPAT | ENT_HTML5 | ENT_SUBSTITUTE, 'utf-8');
-}
+require_once 'lib/simple_html_dom.php';
 
-function clean_html($html) {
-    $html = preg_replace('/\s+/', ' ', $html);
+$assert_counter = 0;
 
-    $in_tag = false;
-    $stack = '';
-    $cleaned = '';
+function check($condition, $bad_request=false) {
+    global $assert_counter;
+    $assert_counter++;
 
-    for ($i = 0, $l = strlen($html); $i < $l; $i++) {
-        switch ($html[$i]) {
-        case '<':
-            $in_tag = true;
-            $cleaned .= clean_tag_content($stack) . '<';
-            break;
-        case '>':
-            $in_tag = false;
-            $cleaned .= '>';
-            $stack = '';
-            break;
-        default:
-            if ($in_tag)
-                $cleaned .= $html[$i];
-            else
-                $stack .= $html[$i];
+    if (!$condition) {
+        if ($bad_request) {
+            header('HTTP/1.1 400 Bad Request');
+        } else {
+            header('HTTP/1.1 500 Internal Server Error');
+            echo 'failed to parse scraped data ' . $assert_counter;
         }
+        exit;
     }
 
-    if (!$in_tag)
-        $cleaned .= clean_tag_content($stack);
-
-    return $cleaned;
+    return $condition;
 }
 
 // Fetch details page
-assert(isset($_GET['id']));
-assert(is_numeric($_GET['id']));
-$url = 'http://www.tvgids.nl/programma/' . $_GET['id'];
-$page = file_get_contents($url);
+check(isset($_GET['id']), true);
+check(is_numeric($_GET['id']), true);
+$url = 'http://www.tvgids.nl/programma/' . $_GET['id'] . '?cookieoptin=true';
+$dom = file_get_html($url);
 
-// Parse detailed description, preserving a selected set of HTML tags
-assert(preg_match('%<div id="prog-content">\s*(.*?)\s*<br class="brclear"%s', $page, $m1));
-$description = strip_tags($m1[1], '<p><strong><em><b><i><font><a><span><img><br>');
-$description = str_replace('showVideoPlaybutton()', '', $description);
-$description = clean_html($description);
-//$description = preg_replace('/\s+/', ' ', $description);
-//$description = htmlentities($description, ENT_COMPAT | ENT_HTML5 | ENT_SUBSTITUTE, 'ISO-8859-1');
-//$description = str_replace(array('&lt;', '&gt;', '&sol;'), array('<', '>', '/'), $description);
+$response = compact('url');
 
-// Parse properties list
-assert(preg_match('%<ul\s+id="prog-info-content-colleft">\s*(.*?)\s*</ul>' .
-                  '(?:\s*<ul\s+id="prog-info-content-colright">\s*(.*?)\s*</ul>)?%s', $page, $m2));
-assert(preg_match_all('%<li><strong>([\w ]+):</strong>(.*?)</li>%', $m2[1] . $m2[2], $m3));
-$properties = array();
-$movie_search_url = 'http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=';
-$title = null;
+foreach ($dom->find('head meta[property^=og:]') as $tag) {
+    $key = substr($tag->property, 3);
+    if ($key == 'title' || $key == 'description' || $key == 'url')
+        $response[$key] = $tag->content;
+}
 
-foreach ($m3[1] as $i => $name) {
-    $value = $m3[2][$i];
+if ($prog = $dom->getElementById('prog-content')) {
+    //if ($video = $prog->getElementById('prog-video')) {
+    //    $response['media'] = $video->outertext;
+    //} else if ($carousel = $prog->find('.owl-carousel', 0)) {
+    //    //$images = array();
+    //    //foreach ($carousel->find('div[style^=background:]') as $img) {
+    //    //    check(preg_match('/^background:\s*url\(\'(.*?)\'\).*$/', $img->style, $m));
+    //    //    $images[] = $m[1];
+    //    //}
 
-    // Add IMDB URL for movies
-    if ($value == 'Film'/* || $value == 'Serie/Soap'*/) {
-        $results = json_decode(file_get_contents($movie_search_url . urlencode($title)), true);
+    //    $response['media'] = $carousel->outertext;
+    //}
 
-        if (count($results) > 0) {
-            $lst = reset($results);
-            $id = $lst[0]['id'];
-            $value .= ' (<a href="http://www.imdb.com/title/' . $id . '" target="_blank">IMDB</a>)';
-        }
-    } elseif ($name == 'Titel') {
-        $title = $value;
+    $response['properties'] = array();
+
+    foreach ($prog->find('.programmering_info_detail li') as $tag) {
+        $response['properties'][] = array(
+            'name' => preg_replace('/:\s+$/', '', $tag->children(0)->plaintext),
+            'description' => $tag->children(1)->innertext,
+        );
     }
-
-    $properties[] = array('name' => $name, 'value' => $value);
 }
 
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode(compact('description', 'properties'), JSON_UNESCAPED_SLASHES);
+echo json_encode($response, JSON_UNESCAPED_SLASHES);
 
 ?>

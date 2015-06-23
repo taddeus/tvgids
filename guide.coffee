@@ -216,10 +216,8 @@ ProgramDetailsView = Backbone.View.extend
 
         if id
             $('#loading-screen').show()
-            $.getJSON(
-                'details.php'
-                id: id
-                (data) =>
+            $.getJSON('details.php', id: id)
+                .success (data) =>
                     $('#loading-screen').hide()
                     @$el.show()
                     @$('.content').html(@template(_.extend(id: id, data)))
@@ -228,7 +226,9 @@ ProgramDetailsView = Backbone.View.extend
                     # Align again after images are loaded
                     @$('.content img').load(-> $(@).css(height: 'auto'))
                     @$('.content img').load(=> @alignMiddle())
-            )
+                .error () ->
+                    $('#loading-screen').hide()
+                    alert('failed to get program details')
         else
             @$el.hide()
             @$('.content').empty()
