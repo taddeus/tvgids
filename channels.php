@@ -1,3 +1,3 @@
 <?php
-echo file_get_contents('http://www.tvgids.nl/json/lists/channels.php')
+header('Location: http://www.tvgids.nl/json/lists/channels.php');
 ?>
