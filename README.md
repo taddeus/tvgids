@@ -7,7 +7,7 @@ http://tvgids.nl/lijsten/horizontaal, offering a quick-to-use interface that
 saves preferences (e.g. favorite channels) in HTML5 local storage, rather than
 requiring a registered account.
 
-A working version is available at http://tvgids.tkroes.nl.
+A working version is available at https://tvgids.tkroes.nl.
 
 Features
 --------
